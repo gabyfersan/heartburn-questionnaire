@@ -3,9 +3,10 @@ import useFetch from "react-fetch-hook";
 import NextButton from "../NextButton/NextButton.tsx";
 import Question from "../Question/Question.tsx";
 import "./Questionnaire.css";
+import { getNextquestion, getScore } from "./helperFunctions.js";
 
 function Questionnaire() {
-  const [count, setCount] = useState(0);
+  const [score, setScore] = useState(0);
   const [heartburnQuestions, setHeartburnQuestions] = useState({});
   const [heartburnOutcomes, setHeartburnOutcomes] = useState({});
   const [currentQuestionId, setCurrentQuestionId] = useState("");
@@ -49,15 +50,14 @@ function Questionnaire() {
     }
     if (target.target.className.includes("next")) {
       if (answeredId) {
-        const foundNextObject = currentQuestionObject.next.find(
-          (a) => a.answered == answeredId
-        );
+        const nextQuestion = getNextquestion(currentQuestionObject, answeredId);
+        const currentScore = getScore(currentQuestionObject, answeredId);
+        setScore((prev) => prev + currentScore);
+        console.log("currentScore", score);
+        //currentQuestionObject.next.find((a) => a.answered == answeredId);
+
         setAnsweredId("");
-        setCurrentQuestionId(
-          foundNextObject
-            ? foundNextObject.next_question
-            : currentQuestionObject.next[0].next_question
-        );
+        setCurrentQuestionId(nextQuestion);
       } else {
         setNextButtonClicked(true);
       }
@@ -69,7 +69,10 @@ function Questionnaire() {
       {error && <span>Error</span>}
 
       {currentQuestionObject?.id && (
-        <Question questionObject={currentQuestionObject}  answeredId={answeredId} />
+        <Question
+          questionObject={currentQuestionObject}
+          answeredId={answeredId}
+        />
       )}
       <NextButton answeredId={answeredId} />
       {!answeredId && nextButtonClicked && (

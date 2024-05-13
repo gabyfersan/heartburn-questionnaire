@@ -1,10 +1,7 @@
-import { useState } from "react";
 import RadioInput from "../RadioInput/RadioInput.tsx";
 import "./Question.css";
 
 function Question({ questionObject, answeredId }) {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <h1>{questionObject.question_text}</h1>
