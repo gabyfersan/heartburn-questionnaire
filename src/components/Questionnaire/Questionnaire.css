@@ -1,0 +1,11 @@
+.container-questionnaire {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.container-questionnaire h1 {
+  width: 320px;
+  text-align: left;
+}

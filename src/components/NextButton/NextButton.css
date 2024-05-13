@@ -1,0 +1,29 @@
+.next-button {
+  cursor: pointer;
+  border: 1px solid rgb(1, 109, 214, 1);
+  background-color: rgb(1, 109, 214, 1);
+  /* border-color: rgb(1, 109, 214, 1); */
+  color: white;
+  width: 90px;
+  height: 50px;
+  border-radius: 5%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.next-button span {
+  position: absolute;
+  right: -3px;
+  font-size: 24px;
+}
+
+.answer-not-selected {
+  background-color: light-dark(rgba(239, 239, 239, 0.3), rgba(19, 1, 1, 0.3));
+  color: light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3));
+  border-color: light-dark(
+    rgba(118, 118, 118, 0.3),
+    rgba(195, 195, 195, 0.3)
+  ) !important;
+}
