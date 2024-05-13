@@ -1,14 +1,14 @@
 import "./NextButton.css";
 
-function NextButton({ answerId }) {
+function NextButton({ answeredId }) {
   return (
     <>
       <button
         className={`next next-button  ${
-          !answerId ? "answer-not-selected" : ""
+          !answeredId ? "answer-not-selected" : ""
         }`}
       >
-        {console.log("answerId", answerId)}
+        {console.log("answerId", answeredId)}
         Next
         <span className='next material-symbols-outlined'>chevron_right</span>
       </button>

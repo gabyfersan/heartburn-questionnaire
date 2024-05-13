@@ -8,9 +8,9 @@ function Questionnaire() {
   const [count, setCount] = useState(0);
   const [heartburnQuestions, setHeartburnQuestions] = useState({});
   const [heartburnOutcomes, setHeartburnOutcomes] = useState({});
-  const [nextQuestionId, setNextQuestionId] = useState("");
-  const [nextQuestionObject, setNextQuestionObject] = useState({});
-  const [answerId, setAnswerId] = useState("");
+  const [currentQuestionId, setCurrentQuestionId] = useState("");
+  const [currentQuestionObject, setCurrentQuestionObject] = useState({});
+  const [answeredId, setAnsweredId] = useState("");
   const [nextButtonClicked, setNextButtonClicked] = useState(false);
 
   const { isLoading, data, error } = useFetch(
@@ -18,42 +18,48 @@ function Questionnaire() {
   );
 
   useEffect(() => {
-    setNextQuestionObject(heartburnQuestions[nextQuestionId]);
+    setCurrentQuestionObject(heartburnQuestions[currentQuestionId]);
     console.log(
-      "nextQuestionId",
-      nextQuestionId,
-      heartburnQuestions[nextQuestionId],
+      "currentQuestionId",
+      currentQuestionId,
+      heartburnQuestions[currentQuestionId],
       heartburnQuestions
     );
-  }, [nextQuestionId]);
+  }, [currentQuestionId]);
 
   useEffect(() => {
     if (data) {
       const convertedObject = {};
       setHeartburnOutcomes(data.outcomes);
-      //setNextQuestionId(data.questions[0].id);
-      setNextQuestionId("heartburn_weekly_sleep");
+      //setCurrentQuestionId(data.questions[0].id);
+      //setCurrentQuestionId("heartburn_weekly_sleep");
+      setCurrentQuestionId("is_heartburn_known");
 
       data.questions.forEach((question) => {
         convertedObject[question.id] = question;
       });
       setHeartburnQuestions(convertedObject);
-      //console.log(convertedObject);
-      //setHeartburnQuestion;
     }
   }, [data]);
 
-  //useEffect(() => {}, [nextButtonClicked]);
-
   const handleOptionClick = (target) => {
     if (target.target.name === "answer") {
-      setAnswerId(target.target.getAttribute("data-answer-id"));
+      setAnsweredId(target.target.getAttribute("data-answer-id"));
       setNextButtonClicked(false);
     }
     if (target.target.className.includes("next")) {
-      setNextButtonClicked(true);
-      if (answerId) {
-        setNextQuestionId(answerId);
+      if (answeredId) {
+        const foundNextObject = currentQuestionObject.next.find(
+          (a) => a.answered == answeredId
+        );
+        setAnsweredId("");
+        setCurrentQuestionId(
+          foundNextObject
+            ? foundNextObject.next_question
+            : currentQuestionObject.next[0].next_question
+        );
+      } else {
+        setNextButtonClicked(true);
       }
     }
   };
@@ -62,11 +68,11 @@ function Questionnaire() {
       {isLoading && <span>Loading</span>}
       {error && <span>Error</span>}
 
-      {nextQuestionObject?.id && (
-        <Question questionObject={nextQuestionObject} />
+      {currentQuestionObject?.id && (
+        <Question questionObject={currentQuestionObject}  answeredId={answeredId} />
       )}
-      <NextButton answerId={answerId} />
-      {!answerId && nextButtonClicked && (
+      <NextButton answeredId={answeredId} />
+      {!answeredId && nextButtonClicked && (
         <span style={{ color: "red" }}>Please choice one answer above</span>
       )}
     </section>

@@ -1,22 +1,24 @@
 import { useState } from "react";
-import RadioButton from "../RadioInput/RadioInput.tsx";
+import RadioInput from "../RadioInput/RadioInput.tsx";
 import "./Question.css";
 
-function Question({ questionObject }) {
+function Question({ questionObject, answeredId }) {
   const [count, setCount] = useState(0);
 
   return (
     <>
       <h1>{questionObject.question_text}</h1>
       <div className='container'>
-        <RadioButton
+        <RadioInput
           label={questionObject.answers[0].label}
           answerId={questionObject.answers[0].id}
+          answeredId={answeredId}
         />
 
-        <RadioButton
+        <RadioInput
           label={questionObject.answers[1].label}
           answerId={questionObject.answers[1].id}
+          answeredId={answeredId}
         />
       </div>
     </>

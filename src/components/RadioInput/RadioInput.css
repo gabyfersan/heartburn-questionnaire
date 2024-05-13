@@ -17,7 +17,7 @@
   cursor: pointer;
 }
 .container-radio-button .checkmark {
-  opacity: 0;
+  /* opacity: 0; */
   font-size: 16px;
   margin-left: 10px;
 }
@@ -27,9 +27,9 @@
   background-color: rgb(1, 109, 214, 0.9);
 }
 
-.container-radio-button input:checked ~ .checkmark {
+/* .container-radio-button input:checked ~ .checkmark {
   opacity: 1 !important;
-}
+} */
 .container-radio-button input:checked ~ .container-radio-button {
 }
 
