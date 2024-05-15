@@ -6,7 +6,7 @@ function Question({ questionObject, answeredId }) {
   return (
     <>
       <h1>{questionObject.question_text}</h1>
-      <div className='container'>
+      <div className='radio-input-container'>
         <RadioInput
           label={questionObject.answers[0].label}
           answerId={questionObject.answers[0].id}

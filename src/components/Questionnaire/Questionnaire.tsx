@@ -42,6 +42,14 @@ function Questionnaire() {
     }
   }, [data]);
 
+  const resetQuestionnaire = () => {
+    setCurrentQuestionId("is_heartburn_known");
+    setScore(0);
+    setShowQuestionAndNextButton(true);
+    setNextButtonClicked(false);
+    setAnsweredId("");
+  };
+
   const handleOptionClick = (target) => {
     if (isOptionButtonClicked(target)) {
       setAnsweredId(target.target.getAttribute("data-answer-id"));
@@ -82,6 +90,7 @@ function Questionnaire() {
         <Outcome
           outcomesText={heartburnOutcomes[outcome].text}
           showBookingAMeeting={heartburnOutcomes[outcome].show_booking_button}
+          resetQuestionnaire={resetQuestionnaire}
         />
       )}
       {!answeredId && nextButtonClicked && (
