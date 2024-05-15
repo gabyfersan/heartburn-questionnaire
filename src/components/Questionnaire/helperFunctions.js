@@ -3,7 +3,7 @@ export const getNextquestion = (currentQuestionObject, answeredId) => {
     return null;
   }
   const foundNextObject = currentQuestionObject.next.find(
-    (a) => a.answered === answeredId
+    (next) => next.answered === answeredId
   );
 
   const next_question = foundNextObject
@@ -14,7 +14,7 @@ export const getNextquestion = (currentQuestionObject, answeredId) => {
 
 export const getOutcome = (currentQuestionObject, score) => {
   const foundoutcome = currentQuestionObject.next.find(
-    (a) => score <= a.max_score
+    (next) => score <= next.max_score
   );
 
   return foundoutcome
@@ -24,7 +24,7 @@ export const getOutcome = (currentQuestionObject, score) => {
 
 export const getScore = (currentQuestionObject, answeredId) => {
   const foundAnswersObject = currentQuestionObject.answers.find(
-    (a) => a.id === answeredId
+    (answer) => answer.id === answeredId
   );
 
   return foundAnswersObject.score;
@@ -40,3 +40,9 @@ export const convertObject = (data, key) => {
   });
   return convertedObject;
 };
+
+export const isOptionButtonClicked = (target) =>
+  target.target.name === "answer";
+
+export const isNextButtonClicked = (target) =>
+  target.target.className.includes("next");

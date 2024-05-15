@@ -10,6 +10,8 @@ import {
   getOutcome,
   getScore,
   isLastQuestion,
+  isNextButtonClicked,
+  isOptionButtonClicked,
 } from "./helperFunctions.js";
 
 function Questionnaire() {
@@ -36,38 +38,32 @@ function Questionnaire() {
     if (data) {
       setHeartburnOutcomes(convertObject(data, "outcomes"));
       setCurrentQuestionId("is_heartburn_known");
-      // const convertedObject = {};
-      // data.questions.forEach((question) => {
-      //   convertedObject[question.id] = question;
-      // });
-
       setHeartburnQuestions(convertObject(data, "questions"));
     }
   }, [data]);
 
   const handleOptionClick = (target) => {
-    if (target.target.name === "answer") {
+    if (isOptionButtonClicked(target)) {
       setAnsweredId(target.target.getAttribute("data-answer-id"));
       setNextButtonClicked(false);
     }
-    if (target.target.className.includes("next")) {
-      if (answeredId) {
-        const currentScore = getScore(currentQuestionObject, answeredId);
-        setScore((prev) => prev + currentScore);
-        if (isLastQuestion(currentQuestionObject)) {
-          setShowQuestionAndNextButton(false);
-          setOutcome(getOutcome(currentQuestionObject, score));
-        } else {
-          const nextQuestion = getNextquestion(
-            currentQuestionObject,
-            answeredId
-          );
-          setAnsweredId("");
-          setCurrentQuestionId(nextQuestion);
-        }
-      } else {
+
+    if (isNextButtonClicked(target)) {
+      if (!answeredId) {
         setNextButtonClicked(true);
+        return;
       }
+
+      const currentScore = getScore(currentQuestionObject, answeredId);
+      setScore((prev) => prev + currentScore);
+      if (isLastQuestion(currentQuestionObject)) {
+        setShowQuestionAndNextButton(false);
+        setOutcome(getOutcome(currentQuestionObject, score));
+        return;
+      }
+      const nextQuestion = getNextquestion(currentQuestionObject, answeredId);
+      setAnsweredId("");
+      setCurrentQuestionId(nextQuestion);
     }
   };
   return (
