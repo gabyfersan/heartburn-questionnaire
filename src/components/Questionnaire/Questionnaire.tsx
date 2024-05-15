@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from "react";
 import useFetch from "react-fetch-hook";
 import NextButton from "../NextButton/NextButton.tsx";
+import Outcome from "../Outcome/Outcome.tsx";
 import Question from "../Question/Question.tsx";
 import "./Questionnaire.css";
-import { getNextquestion, getScore } from "./helperFunctions.js";
+import {
+  convertObject,
+  getNextquestion,
+  getOutcome,
+  getScore,
+  isLastQuestion,
+} from "./helperFunctions.js";
 
 function Questionnaire() {
   const [score, setScore] = useState(0);
   const [heartburnQuestions, setHeartburnQuestions] = useState({});
   const [heartburnOutcomes, setHeartburnOutcomes] = useState({});
   const [currentQuestionId, setCurrentQuestionId] = useState("");
+  const [outcome, setOutcome] = useState("");
   const [currentQuestionObject, setCurrentQuestionObject] = useState({});
   const [answeredId, setAnsweredId] = useState("");
   const [nextButtonClicked, setNextButtonClicked] = useState(false);
+  const [showQuestionAndNextButton, setShowQuestionAndNextButton] =
+    useState(true);
 
   const { isLoading, data, error } = useFetch(
     "https://gist.githubusercontent.com/johanlunds/aad03ac7d0f0bcfb95c80584cd4cbdd7/raw/heartburn.json"
@@ -20,26 +30,18 @@ function Questionnaire() {
 
   useEffect(() => {
     setCurrentQuestionObject(heartburnQuestions[currentQuestionId]);
-    console.log(
-      "currentQuestionId",
-      currentQuestionId,
-      heartburnQuestions[currentQuestionId],
-      heartburnQuestions
-    );
-  }, [currentQuestionId]);
+  }, [currentQuestionId, heartburnQuestions]);
 
   useEffect(() => {
     if (data) {
-      const convertedObject = {};
-      setHeartburnOutcomes(data.outcomes);
-      //setCurrentQuestionId(data.questions[0].id);
-      //setCurrentQuestionId("heartburn_weekly_sleep");
+      setHeartburnOutcomes(convertObject(data, "outcomes"));
       setCurrentQuestionId("is_heartburn_known");
+      // const convertedObject = {};
+      // data.questions.forEach((question) => {
+      //   convertedObject[question.id] = question;
+      // });
 
-      data.questions.forEach((question) => {
-        convertedObject[question.id] = question;
-      });
-      setHeartburnQuestions(convertedObject);
+      setHeartburnQuestions(convertObject(data, "questions"));
     }
   }, [data]);
 
@@ -50,14 +52,19 @@ function Questionnaire() {
     }
     if (target.target.className.includes("next")) {
       if (answeredId) {
-        const nextQuestion = getNextquestion(currentQuestionObject, answeredId);
         const currentScore = getScore(currentQuestionObject, answeredId);
         setScore((prev) => prev + currentScore);
-        console.log("currentScore", score);
-        //currentQuestionObject.next.find((a) => a.answered == answeredId);
-
-        setAnsweredId("");
-        setCurrentQuestionId(nextQuestion);
+        if (isLastQuestion(currentQuestionObject)) {
+          setShowQuestionAndNextButton(false);
+          setOutcome(getOutcome(currentQuestionObject, score));
+        } else {
+          const nextQuestion = getNextquestion(
+            currentQuestionObject,
+            answeredId
+          );
+          setAnsweredId("");
+          setCurrentQuestionId(nextQuestion);
+        }
       } else {
         setNextButtonClicked(true);
       }
@@ -65,16 +72,23 @@ function Questionnaire() {
   };
   return (
     <section className='container-questionnaire' onClick={handleOptionClick}>
+      {score}
       {isLoading && <span>Loading</span>}
       {error && <span>Error</span>}
 
-      {currentQuestionObject?.id && (
+      {currentQuestionObject?.id && showQuestionAndNextButton && (
         <Question
           questionObject={currentQuestionObject}
           answeredId={answeredId}
         />
       )}
-      <NextButton answeredId={answeredId} />
+      {showQuestionAndNextButton && <NextButton answeredId={answeredId} />}
+      {!showQuestionAndNextButton && (
+        <Outcome
+          outcomesText={heartburnOutcomes[outcome].text}
+          showBookingAMeeting={heartburnOutcomes[outcome].show_booking_button}
+        />
+      )}
       {!answeredId && nextButtonClicked && (
         <span style={{ color: "red" }}>Please choice one answer above</span>
       )}

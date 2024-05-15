@@ -8,7 +8,6 @@ function NextButton({ answeredId }) {
           !answeredId ? "answer-not-selected" : ""
         }`}
       >
-        {console.log("answerId", answeredId)}
         Next
         <span className='next material-symbols-outlined'>chevron_right</span>
       </button>
