@@ -1,5 +1,5 @@
+import React from "react";
 import "./RadioInput.css";
-
 function RadioInput({ label, answerId, answeredId }) {
   return (
     <>

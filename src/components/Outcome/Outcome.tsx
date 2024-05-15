@@ -1,3 +1,4 @@
+import React from "react";
 import "./Outcome.css";
 
 function Outcome({ outcomesText, showBookingAMeeting }) {

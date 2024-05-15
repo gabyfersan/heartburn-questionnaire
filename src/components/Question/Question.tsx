@@ -1,3 +1,4 @@
+import React from "react";
 import RadioInput from "../RadioInput/RadioInput.tsx";
 import "./Question.css";
 
