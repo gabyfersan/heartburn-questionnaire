@@ -68,7 +68,6 @@ function Questionnaire() {
   };
   return (
     <section className='container-questionnaire' onClick={handleOptionClick}>
-      {score}
       {isLoading && <span>Loading</span>}
       {error && <span>Error</span>}
 
